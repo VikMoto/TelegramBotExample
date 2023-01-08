@@ -25,7 +25,7 @@ public class StartCommand extends BotCommand {
 
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
-       String text = "What currency exchange rate do You want to know:";
+       String text = "What currency Exchange Rate do You want to know:";
         SendMessage sendMessage = new SendMessage();
         sendMessage.setText(text);
         sendMessage.setChatId(Long.toString(chat.getId()));
