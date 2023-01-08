@@ -17,7 +17,7 @@ public class PrivatBankCurrencyService implements CurrencyService{
 
 
     @Override
-    public double getRate(Currency currency) {
+    public double[] getRate(Currency currency) {
         String url = "https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5";
         final String response;
         try {
@@ -45,11 +45,9 @@ public class PrivatBankCurrencyService implements CurrencyService{
         Type collectionType = new TypeToken<List<CurrencyItem>>(){}.getType();
         List<CurrencyItem> enums = gson.fromJson(response, collectionType);
 
-//                for (CurrencyItem currencyItem : enums) {
-//                    System.out.println(currencyItem);
-//                }
 /** find USD/UAH */
-        Float aFloat = enums
+        double[] aFloat = new double[]{0.0, 0.0};
+        aFloat[0] = enums
                 .stream()
                 .filter(currencyItem -> currencyItem.getCcy() == currency)
                 .filter(it -> it.getBase_ccy() == currency.UAH)
@@ -57,7 +55,16 @@ public class PrivatBankCurrencyService implements CurrencyService{
                 .findFirst()
                 .orElseThrow();
 
-        System.out.println("USD/UAH " + aFloat);
+        aFloat[1] = enums
+                .stream()
+                .filter(currencyItem -> currencyItem.getCcy() == currency)
+                .filter(it -> it.getBase_ccy() == currency.UAH)
+                .map(it -> it.getSale())
+                .findFirst()
+                .orElseThrow();
+
+
+        System.out.println("USD/UAH " + aFloat[0] + " - " + aFloat[1]);
 
         return aFloat;
     }
